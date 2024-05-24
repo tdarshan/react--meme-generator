@@ -1,10 +1,14 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MemesData from "../MemesData.js"
 
 import Draggable from 'react-draggable';
+import { toPng } from "html-to-image";
+
 
 const Meme = () => {
+
+    const memeRef = useRef(null);
 
     // let [memeImage, setMemeImage] = useState("");
     const [meme, setMeme] = useState({
@@ -45,7 +49,7 @@ const Meme = () => {
 
 
     const handleChange = (event) => {
-        const {name, value} = event.target;
+        const { name, value } = event.target;
 
         setMeme(prev => ({
             ...prev,
@@ -53,9 +57,23 @@ const Meme = () => {
         }))
     }
 
+    const downloadMeme = async () => {
+        toPng(memeRef.current, {cacheBust: false})
+            .then((dataURL) => {
+                const link = document.createElement("a");
+
+                link.download = "meme.png";
+                link.href = dataURL;
+                link.click();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     return (
         <main>
-            
+
             <form className="form">
 
 
@@ -100,16 +118,23 @@ const Meme = () => {
                 </button>
 
             </form>
-            <div className="meme">
-             <img src={meme.randomImage} className="meme--image" />
+            <div className="meme" id="meme" ref={memeRef}>
+                <img src={meme.randomImage} className="meme--image" />
 
-             <Draggable>
-             <h2 className="meme--text top" draggable={true}>{meme.topText}</h2>
-             </Draggable>
+                <Draggable>
+                    <h2 className="meme--text top" draggable={true}>{meme.topText}</h2>
+                </Draggable>
 
-             <Draggable>
-             <h2 className="meme--text bottom" draggable={true}>{meme.bottomText}</h2>
-             </Draggable>
+                <Draggable>
+                    <h2 className="meme--text bottom" draggable={true}>{meme.bottomText}</h2>
+                </Draggable>
+            </div>
+
+            <div>
+                <button onClick={downloadMeme} className="download-btn">
+                    Download
+                    <img src="/download.svg" alt="Download" height="16" />    
+                </button>
             </div>
         </main>
     )
