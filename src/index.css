@@ -55,6 +55,11 @@ main {
   text-indent: 5px;
   width: 100%;
   padding: 8px 0;
+  height: 100%;
+}
+
+.form--submit {
+  cursor: pointer;
 }
 
 .form--button {

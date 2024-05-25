@@ -47,6 +47,7 @@ const Meme = () => {
         }))
     }
 
+    
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -71,16 +72,24 @@ const Meme = () => {
             });
     };
 
+
+
+    const [textArr, setTextArr] = useState([]);
+    const addText = (e) => {
+        e.preventDefault();
+
+        setTextArr(prev => [...prev, meme.topText]);
+    }
+
+
+
     return (
         <main>
 
-            <form className="form">
+            <form className="form" onSubmit={addText}>
 
 
                 <div>
-                    {/* <label htmlFor="top-text">
-                        Top Text
-                    </label> */}
                     <input
                         type="text"
                         placeholder="Top text"
@@ -90,24 +99,11 @@ const Meme = () => {
                         onChange={(e) => handleChange(e)}
                         value={meme.topText}
                     />
-
                 </div>
 
-                <div>
-                    {/* <label htmlFor="bottom-text">
-                        Bottom Text
-                    </label> */}
-                    <input
-                        type="text"
-                        placeholder="Bottom text"
-                        className="form--input"
-                        id="bottom-text"
-                        name="bottomText"
-                        onChange={(e) => handleChange(e)}
-                        value={meme.bottomText}
-                    />
-
-                </div>
+                <button type="submit" className="form--submit">
+                    Add
+                </button>
 
                 <button
                     type="button"
@@ -121,13 +117,16 @@ const Meme = () => {
             <div className="meme" id="meme" ref={memeRef}>
                 <img src={meme.randomImage} className="meme--image" />
 
-                <Draggable>
-                    <h2 className="meme--text top" draggable={true}>{meme.topText}</h2>
-                </Draggable>
+                {
+                    textArr.map((text, index) => {
+                        return (
+                            <Draggable key={index}>
+                                <h2 className="meme--text top" draggable={true}>{text}</h2>
+                            </Draggable>
+                        )
+                    })
+                }
 
-                <Draggable>
-                    <h2 className="meme--text bottom" draggable={true}>{meme.bottomText}</h2>
-                </Draggable>
             </div>
 
             <div>
